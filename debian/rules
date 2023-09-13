@@ -73,29 +73,26 @@ ifeq ($(DEB_NAME_ACT),cross-toolchain-base)
   endif
 endif
 
-# ===============================================================
-# ATTENTION: don't forget to update these in debian/tests/control
-# ===============================================================
-MIN_VER_GLIBC		:= 2.32-1~
-MIN_VER_LINUX		:= 5.10.13
-MIN_VER_GCC		:= 10.3.0-7~
-MIN_VER_BINUTILS	:= 2.37-4~
-VER_GCC_BASE		:= 10
+MIN_VER_GLIBC		:= 2.34-3~
+MIN_VER_LINUX		:= 5.18.16
+MIN_VER_GCC		:= 11.3.0-5~
+MIN_VER_BINUTILS	:= 2.37-10~
+VER_GCC_BASE		:= 11
 libgcc_base		:= gcc-s
 
 DEB_VER_LINUX  := $(shell apt-cache policy linux-libc-dev | awk '/^ \*\*\*/ {print $$2}')
 ifeq ($(vendor),Ubuntu)
-  VER_LINUX      := $(shell echo $(DEB_VER_LINUX) | sed 's/^\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/')
-else
-  VER_LINUX      := $(shell echo $(DEB_VER_LINUX) | sed 's/^\([0-9]*\.[0-9]*\).*/\1/')
+  MIN_VER_GLIBC	:= 2.36-0~
+  MIN_VER_LINUX	:= 5.15.0
+  MIN_VER_GCC		:= 11.3.0-5~
+  MIN_VER_BINUTILS	:= 2.37-10~
+  VER_GCC_BASE		:= 11
+  libgcc_base		:= gcc-s
 endif
 ifeq ($(vendor),Ubuntu)
-  MIN_VER_GLIBC		:= 2.34-0~
-  VER_GCC_BASE		:= 10
-  MIN_VER_GCC		:= 10.3.0-7~
-  MIN_VER_BINUTILS	:= 2.37-2~
-  MIN_VER_LINUX		:= 5.13
-  libgcc_base		:= gcc-s
+  VER_LINUX      := $(shell echo $(MIN_VER_LINUX) | sed 's/^\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/')
+else
+  VER_LINUX      := $(shell echo $(MIN_VER_LINUX) | sed 's/^\([0-9]*\.[0-9]*\).*/\1/')
 endif
 
 VER_GCC          := $(shell dpkg-parsechangelog -SVersion -l/usr/src/gcc-${VER_GCC_BASE}/debian/changelog | cut -f 1 -d '-')
@@ -1211,8 +1208,7 @@ ifeq ($(DEB_NAME_ACT),cross-toolchain-base-mipsen)
 endif
 	@echo START $@
 	( \
-	  sed -e "s/CROSS_ARCH/${CROSS_ARCH}/g" \
-	    -e "s/CROSS_GNU_TYPE/${CROSS_GNU_TYPE}/g" \
+	  sed \
 	    -e "s/MIN_VER_GLIBC/${MIN_VER_GLIBC}/g" \
 	    -e "s/MIN_VER_LINUX/${MIN_VER_LINUX}/g" \
 	    -e "s/VER_LINUX/${VER_LINUX}/g" \

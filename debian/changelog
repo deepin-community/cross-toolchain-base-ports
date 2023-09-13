@@ -1,3 +1,22 @@
+cross-toolchain-base-ports (52) unstable; urgency=medium
+
+  * Build using glibc 2.34-4.
+  * Build using linux 5.18.16.
+  * Build using gcc 11.3.0-5.
+  * Build using binutils 2.38.
+  * Merge changes from c-t-b 60.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 24 Aug 2022 10:09:34 +0200
+
+cross-toolchain-base-ports (51) unstable; urgency=medium
+
+  * Build using glibc 2.33-1.
+  * Build using linux 5.15.5.
+  * Build using gcc 10.3.0-7.
+  * Build using binutils 2.37-10.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 14 Dec 2021 12:15:50 +0100
+
 cross-toolchain-base-ports (50) unstable; urgency=medium
 
   * Build without libaudit.
