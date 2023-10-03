@@ -3,9 +3,9 @@ Reworked by Dimitri John Ledkov <xnox@debian.org> and
 Matthias Klose <doko@debian.org> to build packages for multiple architectures.
 
 (C) 2010 Linaro
-(C) 2012-2015 Canonical Ltd.
+(C) 2012-2022 Canonical Ltd.
 (C) 2015 Dimitri John Ledkov
-(C) 2015 Matthias Klose
+(C) 2015-2022 Matthias Klose
 
 These scripts are free software; you can redistribute it and/or modify it
 under the terms of the Eclipse Public License v1.0.

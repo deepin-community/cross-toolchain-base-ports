@@ -1,6 +1,6 @@
 --- a/debian/rules
 +++ b/debian/rules
-@@ -144,10 +144,12 @@ else
+@@ -146,10 +146,12 @@ else
    else
      DEB_UDEB_PACKAGES = $(libc)-udeb
    endif
@@ -15,7 +15,7 @@
  # Generic kernel version check
 --- a/localedata/SUPPORTED
 +++ b/localedata/SUPPORTED
-@@ -1,500 +1,3 @@
+@@ -1,503 +1,3 @@
  # This file names the currently supported and somewhat tested locales.
  # If you have any additions please file a glibc bug report.
  SUPPORTED-LOCALES=\
@@ -97,6 +97,7 @@
 -bs_BA.UTF-8/UTF-8 \
 -bs_BA/ISO-8859-2 \
 -byn_ER/UTF-8 \
+-C.UTF-8/UTF-8 \
 -ca_AD.UTF-8/UTF-8 \
 -ca_AD/ISO-8859-15 \
 -ca_ES.UTF-8/UTF-8 \
@@ -402,6 +403,7 @@
 -pt_PT@euro/ISO-8859-15 \
 -quz_PE/UTF-8 \
 -raj_IN/UTF-8 \
+-rif_MA/UTF-8 \
 -ro_RO.UTF-8/UTF-8 \
 -ro_RO/ISO-8859-2 \
 -ru_RU.UTF-8/UTF-8 \
@@ -452,6 +454,7 @@
 -sv_SE.ISO-8859-15/ISO-8859-15 \
 -sw_KE/UTF-8 \
 -sw_TZ/UTF-8 \
+-syr/UTF-8 \
 -szl_PL/UTF-8 \
 -ta_IN/UTF-8 \
 -ta_LK/UTF-8 \
