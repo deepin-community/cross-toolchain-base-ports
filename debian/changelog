@@ -4,8 +4,9 @@ cross-toolchain-base-ports (63~deepin1) unstable; urgency=medium
   * Build using gcc 13.2.0-3.
   * Build using linux 5.10.158.
   * Drop packages for arc-linux-gnu.
+  * Drop packages for alpha-linux-gnu.
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 04 Oct 2023 15:17:25 +0800
+ -- Tianyu Chen <sweetyfish@deepin.org>  Sat, 07 Oct 2023 13:54:25 +0800
 
 cross-toolchain-base-ports (63) unstable; urgency=medium
 

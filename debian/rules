@@ -48,7 +48,7 @@ ifeq ($(DEB_NAME_ACT),cross-toolchain-base)
   CROSS_ARCHS	?= amd64 i386 s390x ppc64el arm64 armhf armel \
 			$(if $(filter $(vendor), Ubuntu), powerpc)
 else ifeq ($(DEB_NAME_ACT),cross-toolchain-base-ports)
-  CROSS_ARCHS  ?= alpha hppa m68k ppc64 riscv64 sh4 sparc64 x32 \
+  CROSS_ARCHS  ?= hppa m68k ppc64 riscv64 sh4 sparc64 x32 \
 			$(if $(filter $(vendor), Ubuntu),, powerpc)
 else # -mipsen
   CROSS_ARCHS  ?= mips mipsel mips64el mips64 mipsn32 mipsn32el \
