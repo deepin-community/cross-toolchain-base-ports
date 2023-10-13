@@ -5,13 +5,13 @@ Maintainer: Cross Toolchain Base Team <cross-toolchain-base-devs@lists.launchpad
 Uploaders: Matthias Klose <doko@debian.org>, Dimitri John Ledkov <xnox@debian.org>
 Vcs-Browser: https://salsa.debian.org/toolchain-team/cross-toolchain-base/tree/ports
 Vcs-Git: https://salsa.debian.org/toolchain-team/cross-toolchain-base.git -b ports
-Standards-Version: 4.5.1
+Standards-Version: 4.6.2
 Build-Depends: binutils-multiarch,
-  dpkg (>= 1.16.0~ubuntu6), rdfind, symlinks, lsb-release,
+  dpkg (>= 1.21.17), rdfind, symlinks, lsb-release,
   binutils-source (>= MIN_VER_BINUTILS),
   glibc-source (>= MIN_VER_GLIBC),
   gcc-VER_GCC_BASE-source (>= MIN_VER_GCC),
-  linux-source (>= MIN_VER_LINUX), linux-libc-dev (>= MIN_VER_LINUX),
+  linux-source-VER_LINUX (>= MIN_VER_LINUX), linux-libc-dev (>= MIN_VER_LINUX),
   autoconf (>= 2.69), autoconf2.69, autogen,
   automake, bison (>= 1:2.3), chrpath, debhelper-compat (= 13),
   dpkg-dev (>= 1.15.3.1), fakeroot, file, flex,
@@ -23,7 +23,8 @@ Build-Depends: binutils-multiarch,
   sed (>= 4.0.5-4), sharutils, tar (>= 1.22), xz-utils,
   asciidoc, texinfo, cpio, python3, bc, time,
   libconfig-auto-perl, libfile-temp-perl, libconfig-auto-perl,
-  libfile-homedir-perl, liblocale-gettext-perl, libunwind-dev [amd64 i386 x32]
+  libfile-homedir-perl, liblocale-gettext-perl, libunwind-dev [amd64 i386 x32],
+  libjansson-dev, pkg-config,
 Build-Conflicts: dpkg-cross, libdebian-dpkgcross-perl,
   BINUTILS_BUILD_CONFLICTS
   GLIBC_BUILD_CONFLICTS

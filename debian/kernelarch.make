@@ -1,4 +1,5 @@
 KERNEL_ARCH_alpha:=alpha
+KERNEL_ARCH_arc:=arc
 KERNEL_ARCH_arm64:=arm64
 KERNEL_ARCH_armhf:=arm
 KERNEL_ARCH_armel:=arm
@@ -30,7 +31,5 @@ KERNEL_ARCH_i386:=x86
 KERNEL_ARCH_amd64:=x86
 KERNEL_ARCH_x32:=x86
 
-CROSS_BIARCH_armhf:=armel
-CROSS_BIARCH_armel:=armhf
 CROSS_BIARCH_powerpc:=ppc64
 CROSS_BIARCH_s390x:=s390
