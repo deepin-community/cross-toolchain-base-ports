@@ -1,3 +1,9 @@
+cross-toolchain-base-ports (63~deepin2) unstable; urgency=medium
+
+  * remove hppa.
+
+ -- LiChengGang <lichenggang@uniontech.com>  Tue, 17 Oct 2023 23:57:07 +0800
+
 cross-toolchain-base-ports (63~deepin1) unstable; urgency=medium
 
   * Build using binutils 2.38-deepin.
