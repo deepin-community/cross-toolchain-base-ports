@@ -61,10 +61,10 @@ _gnu_type        = $(shell dpkg-architecture -a$(1) -qDEB_HOST_GNU_TYPE -f)
 CROSS_GNU_TYPE   = $(call _gnu_type,${CROSS_ARCH})
 CROSS_PKG_GNU_TYPE = $(subst _,-,$(call _gnu_type,${CROSS_ARCH}))
 
-MIN_VER_GLIBC		:= 2.37-3
-MIN_VER_LINUX		:= 5.10.158
+MIN_VER_GLIBC		:= 2.37-12
+MIN_VER_LINUX		:= 6.5.10
 MIN_VER_GCC		:= 13.2.0-3
-MIN_VER_BINUTILS	:= 2.38-deepin
+MIN_VER_BINUTILS	:= 2.41-5
 VER_GCC_BASE		:= 13
 libgcc_base		:= gcc-s
 

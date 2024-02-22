@@ -1,3 +1,11 @@
+cross-toolchain-base-ports (63~deepin2) unstable; urgency=medium
+
+  * Build using glibc 2.37-12.
+  * Build using linux 6.5.10.
+  * Build using binutils 2.41-5.
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 22 Feb 2024 11:48:28 +0800
+
 cross-toolchain-base-ports (63~deepin1) unstable; urgency=medium
 
   * Build using binutils 2.38-deepin.
