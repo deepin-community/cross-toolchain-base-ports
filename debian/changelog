@@ -1,3 +1,10 @@
+cross-toolchain-base-ports (63~deepin3) unstable; urgency=medium
+
+  * Add loong64 to cross architecture (CROSS_ARCHS).
+  * Mark loongarch as kernel architecture for loong64.
+
+ -- Mingcong Bai <baimingcong@uniontech.com>  Wed, 19 Jun 2024 13:17:49 +0800
+
 cross-toolchain-base-ports (63~deepin2) unstable; urgency=medium
 
   * Build using glibc 2.37-12.
