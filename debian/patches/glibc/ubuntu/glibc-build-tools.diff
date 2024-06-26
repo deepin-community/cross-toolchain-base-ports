@@ -1,6 +1,6 @@
 --- a/debian/rules
 +++ b/debian/rules
-@@ -104,8 +104,8 @@ TIMEOUTFACTOR = 25
+@@ -106,8 +106,8 @@ TIMEOUTFACTOR = 25
  CC     = $(DEB_HOST_GNU_TYPE)-$(BASE_CC)$(DEB_GCC_VERSION)
  CXX    = $(DEB_HOST_GNU_TYPE)-$(BASE_CXX)$(DEB_GCC_VERSION)
  MIG    = $(DEB_HOST_GNU_TYPE)-$(BASE_MIG)
