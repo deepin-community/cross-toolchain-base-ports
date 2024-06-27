@@ -1,3 +1,32 @@
+cross-toolchain-base-ports (65~deepin1) unstable; urgency=medium
+
+  * Enable loong64 support.
+  * Adjust linux-source, binutils-source, glibc-source versions.
+
+ -- Mingcong Bai <baimingcong@uniontech.com>  Wed, 26 Jun 2024 09:35:43 +0800
+
+cross-toolchain-base-ports (65) unstable; urgency=medium
+
+  * Build using linux 6.7.12.
+  * Build using binutils 2.42-4.
+  * Build using gcc 13.2.0-25.
+  * Build using glibc 2.38-11.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 16 May 2024 10:56:05 +0200
+
+cross-toolchain-base-ports (64) unstable; urgency=medium
+
+  * Build using linux 6.5.8. Closes: #1042115.
+  * Build using binutils 2.41-6.
+  * Build using gcc 12.3.0-11.
+  * Fix some lintian warnings.
+  * Update Ubuntu patches for glibc-2.38.
+  * Also fix libm.a, now a ldscript on some architectures with glibc-2.38.
+  * Build riscv64 packages from c-t-b.
+  * Prepare to build packages for loong64.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 10 Aug 2023 11:16:53 +0200
+
 cross-toolchain-base-ports (63~deepin2) unstable; urgency=medium
 
   * Build using glibc 2.37-12.
