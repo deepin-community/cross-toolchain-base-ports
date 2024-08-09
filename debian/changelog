@@ -1,20 +1,40 @@
-cross-toolchain-base-ports (63~deepin2) unstable; urgency=medium
+cross-toolchain-base-ports (67) unstable; urgency=medium
 
-  * Build using glibc 2.37-12.
-  * Build using linux 6.5.10.
-  * Build using binutils 2.41-5.
+  * Source-only upload.
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 22 Feb 2024 11:48:28 +0800
+ -- Matthias Klose <doko@debian.org>  Tue, 16 Jul 2024 21:27:39 +0200
 
-cross-toolchain-base-ports (63~deepin1) unstable; urgency=medium
+cross-toolchain-base-ports (66) unstable; urgency=medium
 
-  * Build using binutils 2.38-deepin.
-  * Build using gcc 13.2.0-3.
-  * Build using linux 5.10.158.
-  * Drop packages for arc-linux-gnu.
-  * Drop packages for alpha-linux-gnu.
+  * Build using glibc 2.39-4.
+  * Build using linux 6.9.9.
+  * Build using gcc 13.3.0-3.
+  * Build packages for loong64.
+  * Drop build dependency on autogen. Closes: #1076257.
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Sat, 07 Oct 2023 13:54:25 +0800
+ -- Matthias Klose <doko@debian.org>  Tue, 16 Jul 2024 11:05:46 +0200
+
+cross-toolchain-base-ports (65) unstable; urgency=medium
+
+  * Build using linux 6.7.12.
+  * Build using binutils 2.42-4.
+  * Build using gcc 13.2.0-25.
+  * Build using glibc 2.38-11.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 16 May 2024 10:56:05 +0200
+
+cross-toolchain-base-ports (64) unstable; urgency=medium
+
+  * Build using linux 6.5.8. Closes: #1042115.
+  * Build using binutils 2.41-6.
+  * Build using gcc 12.3.0-11.
+  * Fix some lintian warnings.
+  * Update Ubuntu patches for glibc-2.38.
+  * Also fix libm.a, now a ldscript on some architectures with glibc-2.38.
+  * Build riscv64 packages from c-t-b.
+  * Prepare to build packages for loong64.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 10 Aug 2023 11:16:53 +0200
 
 cross-toolchain-base-ports (63) unstable; urgency=medium
 

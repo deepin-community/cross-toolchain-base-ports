@@ -6,6 +6,7 @@ KERNEL_ARCH_armel:=arm
 KERNEL_ARCH_m68k:=m68k
 KERNEL_ARCH_hppa:=parisc
 KERNEL_ARCH_ia64:=ia64
+KERNEL_ARCH_loong64:=loongarch
 KERNEL_ARCH_mips:=mips
 KERNEL_ARCH_mipsel:=mips
 KERNEL_ARCH_mipsn32:=mips
