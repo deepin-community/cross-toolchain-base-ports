@@ -45,10 +45,10 @@ ifeq ($(DEB_NAME_ACT),cross-toolchain-base-mipsen)
 endif
 
 ifeq ($(DEB_NAME_ACT),cross-toolchain-base)
-  CROSS_ARCHS	?= amd64 i386 s390x ppc64el arm64 armhf armel \
+  CROSS_ARCHS	?= amd64 i386 s390x ppc64el arm64 armhf armel riscv64 \
 			$(if $(filter $(vendor), Ubuntu), powerpc)
 else ifeq ($(DEB_NAME_ACT),cross-toolchain-base-ports)
-  CROSS_ARCHS  ?= hppa m68k ppc64 riscv64 sh4 sparc64 x32 \
+  CROSS_ARCHS  ?= alpha arc hppa loong64 m68k ppc64 sh4 sparc64 x32 \
 			$(if $(filter $(vendor), Ubuntu),, powerpc)
 else # -mipsen
   CROSS_ARCHS  ?= mips mipsel mips64el mips64 mipsn32 mipsn32el \
@@ -61,20 +61,33 @@ _gnu_type        = $(shell dpkg-architecture -a$(1) -qDEB_HOST_GNU_TYPE -f)
 CROSS_GNU_TYPE   = $(call _gnu_type,${CROSS_ARCH})
 CROSS_PKG_GNU_TYPE = $(subst _,-,$(call _gnu_type,${CROSS_ARCH}))
 
-MIN_VER_GLIBC		:= 2.37-12
-MIN_VER_LINUX		:= 6.5.10
-MIN_VER_GCC		:= 13.2.0-3
-MIN_VER_BINUTILS	:= 2.41-5
+# package metadata information
+ifeq (,$(ELF_PACKAGE_METADATA))
+  ELF_PACKAGE_METADATA := $(subst $(space),,{ \
+	"type":"deb", \
+	"os":"$(shell awk -F= '/^ID=/ {print $$2}' /etc/os-release)", \
+	"name":"$(DEB_NAME_ACT)", \
+	"version":"$(DEB_SVER_ACT)", \
+	"architecture":"$(HOST_ARCH)" \
+	$(if $(DEB_BUILD_DEBUG_INFO_URL),$(,)"debugInfoUrl":"$(DEB_BUILD_DEBUG_INFO_URL)") \
+    })
+  export ELF_PACKAGE_METADATA
+endif
+
+MIN_VER_GLIBC		:= 2.39-4~
+MIN_VER_LINUX		:= 6.9.9
+MIN_VER_GCC		:= 13.3.0-3~
+MIN_VER_BINUTILS	:= 2.42-4~
 VER_GCC_BASE		:= 13
 libgcc_base		:= gcc-s
 
 DEB_VER_LINUX  := $(shell apt-cache policy linux-libc-dev | awk '/^ \*\*\*/ {print $$2}')
 ifeq ($(vendor),Ubuntu)
-  MIN_VER_GLIBC	:= 2.36-0~
-  MIN_VER_LINUX	:= 5.19.0
-  MIN_VER_GCC		:= 12.2.0-2~
-  MIN_VER_BINUTILS	:= 2.39-1~
-  VER_GCC_BASE		:= 12
+  MIN_VER_GLIBC	:= 2.39-0~
+  MIN_VER_LINUX	:= 6.8.0
+  MIN_VER_GCC		:= 13.3.0-3~
+  MIN_VER_BINUTILS	:= 2.42-4~
+  VER_GCC_BASE		:= 13
   libgcc_base		:= gcc-s
 endif
 ifeq ($(vendor),Ubuntu)
@@ -111,6 +124,7 @@ binutils_ldpath = $(shell if dpkg --compare-versions $(VER_BINUTILS) lt 2.25.51;
 # FIXME: No conflict for the host == cross case ...
 BINUTILS_BUILD_CONFLICTS = $(foreach a,$(CROSS_ARCHS),binutils-$(subst _,-,$(call _gnu_type,$(a))) [!$(a)]$(,))
 GLIBC_BUILD_CONFLICTS = $(foreach a,$(CROSS_ARCHS),libc6-$(a)-cross$(,) linux-libc-dev-$(a)-cross$(,))
+GLIBC_BUILD_CONFLICTS = $(foreach a,$(CROSS_ARCHS),libc6-$(a)-cross$(,))
 
 # taken from gcc packaging
 define unpack_tarball
@@ -118,6 +132,7 @@ define unpack_tarball
 endef
 
 info:
+	@echo 'Package metadata:         $(ELF_PACKAGE_METADATA)'
 	@echo "Binutils version:         ${VER_BINUTILS}	${DEB_VER_BINUTILS}	${PKG_VER_BINUTILS}"
 	@echo "GCC version:              ${VER_GCC}       	${DEB_VER_GCC}          ${VER_GCC_BASE}"
 	@echo "Glibc version:            ${VER_GLIBC}  		${DEB_VER_GLIBC}"
@@ -169,8 +184,10 @@ $(stamp)install-linux.%: $(stamp)build-linux.% $(stamp)init-dirs
 	rm -f `find debian/$(p_lld)/usr/$(CROSS_GNU_TYPE) -name .install`
 	rm -f `find debian/$(p_lld)/usr/$(CROSS_GNU_TYPE) -name ..install.cmd`
 
-	echo "$(p_lld) binary: non-standard-dir-in-usr" \
-	  >> debian/$(p_lld)/usr/share/lintian/overrides/linux-libc-dev-${CROSS_ARCH}-cross
+	( \
+	  echo "$(p_lld) binary: non-standard-dir-in-usr"; \
+	  echo "$(p_lld) binary: wrong-name-for-changelog-of-native-package" \
+	) >> debian/$(p_lld)/usr/share/lintian/overrides/linux-libc-dev-${CROSS_ARCH}-cross
 
 	cp -p /usr/share/doc/linux-source-$(VER_LINUX)/copyright \
 	  debian/$(p_lld)/usr/share/doc/$(p_lld)/.
@@ -594,6 +611,10 @@ $(stamp)repack-%:
 	  libc*-dev*) \
 	    echo "$$pkgname binary: arch-independent-package-contains-binary-or-object" \
 	      >> $$tmp/usr/share/lintian/overrides/$$pkgname; \
+	    echo "$$pkgname binary: no-code-sections" \
+	      >> $$tmp/usr/share/lintian/overrides/$$pkgname; \
+	    echo "$$pkgname binary: unpack-message-for-deb-data" \
+	      >> $$tmp/usr/share/lintian/overrides/$$pkgname; \
 	    echo "$$pkgname binary: unstripped-binary-or-object" \
 	      >> $$tmp/usr/share/lintian/overrides/$$pkgname; \
 	    ;; \
@@ -662,7 +683,7 @@ $(stamp)repack-%:
 	    sed -i -e 's,//,/,g' \
 	      -e "s, /lib64/libm, /usr/$$triplet/lib64/libm,g" \
 	      -e "s, /usr/lib64/libm, /usr/$$triplet/lib64/libm,g" \
-	      $$tmp/usr/*/lib64/libm.so;; \
+	      $$tmp/usr/*/lib64/libm.so $$tmp/usr/*/lib64/libm.a;; \
 	esac; \
 	case "$$pkgname" in \
 	  libc6-dev-x32-amd64-cross|libc6-dev-x32-i386-cross) \
@@ -674,7 +695,7 @@ $(stamp)repack-%:
 	    sed -i -e 's,//,/,g' \
 	      -e "s, /libx32/libm, /usr/$$triplet/libx32/libm,g" \
 	      -e "s, /usr/libx32/libm, /usr/$$triplet/libx32/libm,g" \
-	      $$tmp/usr/*/libx32/libm.so;; \
+	      $$tmp/usr/*/libx32/libm.so $$tmp/usr/*/libx32/libm.a;; \
 	esac; \
 	case "$$pkgname" in \
 	  libc6-dev-powerpc-ppc64-cross|libc6-dev-sparc-sparc64-cross|libc6-dev-i386-x32-cross|libc6-dev-s390-s390x-cross|libc6-dev-i386-amd64-cross|libc6-dev-i386-x32-cross|libc6-dev-mipsn32-mips*-cross) \
@@ -694,7 +715,7 @@ $(stamp)repack-%:
 	    sed -i -e 's,//,/,g' \
 	      -e "s, /lib64/libm, /usr/$$triplet/lib64/libm,g" \
 	      -e "s, /usr/lib64/libm, /usr/$$triplet/lib64/libm,g" \
-	      $$tmp/usr/*/lib64/libm.so;; \
+	      $$tmp/usr/*/lib64/libm.so $$tmp/usr/*/lib64/libm.a;; \
 	esac; \
 	case "$$pkgname" in \
 	  libc6-dev-x32-amd64-cross|libc6-dev-x32-i386-cross) \
@@ -706,7 +727,7 @@ $(stamp)repack-%:
 	    sed -i -e 's,//,/,g' \
 	      -e "s, /libx32/libm, /usr/$$triplet/libx32/libm,g" \
 	      -e "s, /usr/libx32/libm, /usr/$$triplet/libx32/libm,g" \
-	      $$tmp/usr/*/libx32/libm.so;; \
+	      $$tmp/usr/*/libx32/libm.so $$tmp/usr/*/libx32/libm.a;; \
 	esac; \
 	case "$$pkgname" in \
 	  libc6-dev-mips32-mips*-cross) \
@@ -718,7 +739,7 @@ $(stamp)repack-%:
 	    sed -i -e 's,//,/,g' \
 	      -e "s, /libo32/libm, /usr/$$triplet/libo32/libm,g" \
 	      -e "s, /usr/libo32/libm, /usr/$$triplet/libo32/libm,g" \
-	      $$tmp/usr/*/libo32/libm.so;; \
+	      $$tmp/usr/*/libo32/libm.so $$tmp/usr/*/libo32/libm.a;; \
 	esac; \
 	if [ 'lib$(libgcc_base)1-dbg-$${cross_arch}-cross' = $$pkgname ]; then \
 	  sed -i -e 's/^Depends.*/Depends: lib$(libgcc_base)1-$${cross_arch}-cross (= 1:${DEB_VER_GCC}$(CROSS_EXT))/g' $$tmp/DEBIAN/control; \

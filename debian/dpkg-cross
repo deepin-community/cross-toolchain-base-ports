@@ -604,11 +604,13 @@ sub sub_build {
 			warn ($msg);
 			return 0;
 		}
-		$len = sysread( FILE, $data, 4 );
+		$len = sysread( FILE, $data, 7 );
 		close( FILE );
-		return 0 if ($len != 4);
-		return 0 if ($data =~ /^.ELF$/);
-		return 1;
+		return 0 if ($len != 7);
+		return 0 if ($data =~ /^!<arch>$/);
+		return 0 if ($data =~ /^.ELF/);
+		return 1 if ($data =~ /^\/\* GNU $/);
+		return 0;
 	}
 
 	# Helper: fix ldscript.
@@ -864,14 +866,14 @@ sub sub_build {
 		} elsif (m:^/usr/(lib/)$multiarch(.*\.([hH]|[hH][hH]|[hH][pP][pP]))$:) {
 			# regular .h, .hh, or .hpp file under /usr/lib or /usr/lib/<triplet>
 			link_file("$src$_", "$dst$crossdir/$1/$2") or goto fail;
-		} elsif (m:^/usr/lib/$multiarch([^/]+\.[ao])$:) {
-			# regular .a or .o file under /usr/lib or /usr/lib/<triplet>
+		} elsif (m:^/usr/lib/$multiarch([^/]+\.o)$:) {
+			# regular .o file under /usr/lib or /usr/lib/<triplet>
 			link_file("$src$_", "$dst$crosslib/$1") or goto fail;
-		} elsif (m:^/usr/lib64/([^/]+\.[ao])$:) {
-			# regular .a or .o file under /usr/lib64
+		} elsif (m:^/usr/lib64/([^/]+\.o)$:) {
+			# regular .o file under /usr/lib64
 			link_file("$src$_", "$dst$crosslib64/$1") or goto fail;
-		} elsif (m:^/usr/lib32/([^/]+\.[ao])$:) {
-			# regular .a or .o file under /usr/lib32
+		} elsif (m:^/usr/lib32/([^/]+\.o)$:) {
+			# regular .o file under /usr/lib32
 			link_file("$src$_", "$dst$crosslib32/$1") or goto fail;
 		} elsif ((m:^/emul/ia32-linux/usr/lib/([^/]+\.[ao])$:)) {
 			# regular .a or .o file under /emul/ia32-linux/ for #463588
@@ -879,20 +881,20 @@ sub sub_build {
 		} elsif (m:^/usr/libhf/([^/]+\.[ao])$:) {
 			# regular .a or .o file under /usr/libhf
 			link_file("$src$_", "$dst$crosslibhf/$1") or goto fail;
-		} elsif (m:^/usr/libn32/([^/]+\.[ao])$:) {
-			# regular .a or .o file under /usr/libn32
+		} elsif (m:^/usr/libn32/([^/]+\.o)$:) {
+			# regular .o file under /usr/libn32
 			link_file("$src$_", "$dst$crosslibn32/$1") or goto fail;
-		} elsif (m:^/usr/libo32/([^/]+\.[ao])$:) {
-			# regular .a or .o file under /usr/libo32
+		} elsif (m:^/usr/libo32/([^/]+\.o)$:) {
+			# regular .o file under /usr/libo32
 			link_file("$src$_", "$dst$crosslibo32/$1") or goto fail;
 		} elsif (m:^/usr/libsf/([^/]+\.[ao])$:) {
 			# regular .a or .o file under /usr/libsf
 			link_file("$src$_", "$dst$crosslibsf/$1") or goto fail;
-		} elsif (m:^/usr/libx32/([^/]+\.[ao])$:) {
-			# regular .a or .o file under /usr/libx32
+		} elsif (m:^/usr/libx32/([^/]+\.o)$:) {
+			# regular .o file under /usr/libx32
 			link_file("$src$_", "$dst$crosslibx32/$1") or goto fail;
-		} elsif (m:^(/usr)?/lib/($multiarch)?([^/]+\.so[^/]*)$:) {
-			# regular .so* file under /lib, /usr/lib, /lib/<triplet>, /usr/lib/<triplet>
+		} elsif (m:^(/usr)?/lib/($multiarch)?([^/]+\.(a|so[^/]*))$:) {
+			# regular .a or .so* file under /lib, /usr/lib, /lib/<triplet>, /usr/lib/<triplet>
 			if (is_ldscript("$src$_")) {
 				fix_ldscript("$src$_", "$dst$crosslib/$3") or goto fail;
 			} else {
@@ -905,15 +907,15 @@ sub sub_build {
 			} else {
 				next;
 			}
-		} elsif (m:^(/usr)?/lib64/($multiarch)?([^/]+\.so[^/]*)$:) {
-			# regular .so* file under /lib64, /usr/lib64, /lib64/<triplet>, /usr/lib64/<triplet>
+		} elsif (m:^(/usr)?/lib64/($multiarch)?([^/]+\.(a|so[^/]*))$:) {
+			# regular .a or .so* file under /lib64, /usr/lib64, /lib64/<triplet>, /usr/lib64/<triplet>
 			if (is_ldscript("$src$_")) {
 				fix_ldscript("$src$_", "$dst$crosslib64/$3") or goto fail;
 			} else {
 				link_file("$src$_", "$dst$crosslib64/$3") or goto fail;
 			}
-		} elsif (m:^(/usr)?/lib32/([^/]+\.so[^/]*)$:) {
-			# regular .so* file under /lib32, /usr/lib32
+		} elsif (m:^(/usr)?/lib32/([^/]+\.(a|so[^/]*))$:) {
+			# regular .a or .so* file under /lib32, /usr/lib32
 			if (is_ldscript("$src$_")) {
 				fix_ldscript("$src$_", "$dst$crosslib32/$2") or goto fail;
 			} else {
@@ -933,15 +935,15 @@ sub sub_build {
 			} else {
 				link_file("$src$_", "$dst$crosslibhf/$2") or goto fail;
 			}
-		} elsif (m:^(/usr)?/libn32/([^/]+\.so[^/]*)$:) {
-			# regular .so* file under /libn32, /usr/libn32
+		} elsif (m:^(/usr)?/libn32/([^/]+\.(a|so[^/]*))$:) {
+			# regular .a or .so* file under /libn32, /usr/libn32
 			if (is_ldscript("$src$_")) {
 				fix_ldscript("$src$_", "$dst$crosslibn32/$2") or goto fail;
 			} else {
 				link_file("$src$_", "$dst$crosslibn32/$2") or goto fail;
 			}
-		} elsif (m:^(/usr)?/libo32/([^/]+\.so[^/]*)$:) {
-			# regular .so* file under /libo32, /usr/libo32
+		} elsif (m:^(/usr)?/libo32/([^/]+\.(a|so[^/]*))$:) {
+			# regular .a or .so* file under /libo32, /usr/libo32
 			if (is_ldscript("$src$_")) {
 				fix_ldscript("$src$_", "$dst$crosslibo32/$2") or goto fail;
 			} else {
@@ -954,8 +956,8 @@ sub sub_build {
 			} else {
 				link_file("$src$_", "$dst$crosslibsf/$2") or goto fail;
 			}
-		} elsif (m:^(/usr)?/libx32/([^/]+\.so[^/]*)$:) {
-			# regular .so* file under /libx32, /usr/libx32
+		} elsif (m:^(/usr)?/libx32/([^/]+\.(a|so[^/]*))$:) {
+			# regular .a or .so* file under /libx32, /usr/libx32
 			if (is_ldscript("$src$_")) {
 				fix_ldscript("$src$_", "$dst$crosslibx32/$2") or goto fail;
 			} else {
